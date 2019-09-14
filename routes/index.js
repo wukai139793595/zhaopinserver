@@ -194,7 +194,6 @@ router.get('/msglist', function (req, res) {
         to: userid
       }]
     }, filter, function (error, chatMsgs) {
-      console.log('users', users, "chatMsgs", chatMsgs)
       res.send({
         code: 0,
         data: {
@@ -204,7 +203,24 @@ router.get('/msglist', function (req, res) {
       })
     })
   })
-
-
+})
+// 修改已读消息状态
+router.get('/readmsg', function (req, res, next) {
+  const to = req.cookies.userid;
+  const from = req.query.from;
+  ChatModal.update({
+    from: from,
+    to: to,
+    read: false
+  }, {
+    read: true
+  }, {
+    multi: true
+  }, function (error, data) {
+    res.send({
+      code: 0,
+      data: data.nModified
+    })
+  })
 })
 module.exports = router;
